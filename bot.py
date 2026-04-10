@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 import os
 import sys
+import io
 import time
 import base64
 import logging
 
+from PIL import Image
 from dotenv import load_dotenv
 from openai import AsyncOpenAI
 from telegram import Update
@@ -138,15 +140,32 @@ async def on_text(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
 async def on_photo(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     uid = update.effective_user.id
+    log.info("photo from %s, caption=%s", uid, update.message.caption)
     if not allowed(uid):
         return
 
     caption = update.message.caption or "What's in this image?"
 
-    photo = update.message.photo[-1]
-    file = await ctx.bot.get_file(photo.file_id)
-    raw = await file.download_as_bytearray()
-    b64 = base64.b64encode(raw).decode()
+    try:
+        # photos sent as "photo" (compressed) or as "document" (file)
+        if update.message.photo:
+            photo = update.message.photo[-1]
+            file = await ctx.bot.get_file(photo.file_id)
+        elif update.message.document and update.message.document.mime_type and update.message.document.mime_type.startswith("image/"):
+            file = await ctx.bot.get_file(update.message.document.file_id)
+        else:
+            return
+        raw = await file.download_as_bytearray()
+        # resize to keep API requests small
+        img = Image.open(io.BytesIO(raw))
+        img.thumbnail((1024, 1024))
+        buf = io.BytesIO()
+        img.save(buf, format="JPEG", quality=80)
+        b64 = base64.b64encode(buf.getvalue()).decode()
+    except Exception as e:
+        log.error("failed to process photo: %s", e)
+        await update.message.reply_text("Couldn't process the image. Try again?")
+        return
 
     vision_msg = {
         "role": "user",
@@ -192,8 +211,13 @@ def main():
     app.add_handler(CommandHandler("help", cmd_start))
     app.add_handler(CommandHandler("model", cmd_model))
     app.add_handler(CommandHandler("clear", cmd_clear))
-    app.add_handler(MessageHandler(filters.PHOTO, on_photo))
+    app.add_handler(MessageHandler(filters.PHOTO | (filters.Document.IMAGE), on_photo))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, on_text))
+
+    async def on_error(update, ctx):
+        log.error("unhandled error: %s", ctx.error, exc_info=ctx.error)
+
+    app.add_error_handler(on_error)
 
     log.info("bot started — model=%s", MODEL)
     app.run_polling(drop_pending_updates=True)

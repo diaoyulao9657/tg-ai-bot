@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>tokenmix-cli</id>
+    <version>0.1.0</version>
+    <packageSourceUrl>https://github.com/TokenMixAi/tg-ai-bot/tree/main/chocolatey</packageSourceUrl>
+    <owners>tokenmixai</owners>
+
+    <title>TokenMix CLI</title>
+    <authors>TokenMix</authors>
+    <projectUrl>https://tokenmix.ai</projectUrl>
+    <iconUrl>https://tokenmix.ai/favicon.ico</iconUrl>
+    <copyright>Copyright (c) 2026 TokenMix</copyright>
+    <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/TokenMixAi/tg-ai-bot</projectSourceUrl>
+    <docsUrl>https://tokenmix.ai/docs</docsUrl>
+    <bugTrackerUrl>https://github.com/TokenMixAi/tg-ai-bot/issues</bugTrackerUrl>
+    <tags>tokenmix ai llm openai gpt claude gemini deepseek chatbot cli rust</tags>
+    <summary>CLI for TokenMix — one API key for GPT-5, Claude, Gemini, DeepSeek and 155+ LLMs</summary>
+    <description><![CDATA[
+TokenMix CLI gives you command-line access to GPT-5, Claude, Gemini, DeepSeek and 155+ other LLMs through a single OpenAI-compatible API.
+
+## Install
+
+    choco install tokenmix-cli
+
+This package depends on Rust (rust-ms) and uses `cargo install tokenmix-cli` to fetch the latest version from [crates.io](https://crates.io/crates/tokenmix-cli).
+
+## Quick Start
+
+Get a free API key at [tokenmix.ai](https://tokenmix.ai) ($1 free credit, no credit card).
+
+    $env:TOKENMIX_API_KEY = "tm-your_key_here"
+    tokenmix chat "Hello"
+    tokenmix models
+
+## Other Languages
+
+- Python: `pip install tokenmix-tg-bot`
+- Node.js: `npm install -g tokenmix-tg-bot`
+- Rust: `cargo install tokenmix-cli`
+- .NET: `dotnet add package TokenMix.AI`
+- Ruby: `gem install tokenmix`
+- PHP: `composer require tokenmixai/tokenmix-php`
+- Go: `go get github.com/TokenMixAi/tg-ai-bot/go`
+- Docker: `docker pull tokenmixai/tg-ai-bot`
+
+[Get a free API key](https://tokenmix.ai)
+]]></description>
+    <releaseNotes>https://github.com/TokenMixAi/tg-ai-bot/releases</releaseNotes>
+    <dependencies>
+      <dependency id="rust-ms" version="1.70.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="tools/**" target="tools" />
+  </files>
+</package>

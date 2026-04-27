@@ -1,0 +1,13 @@
+VERIFICATION
+
+This package does not bundle any binaries.
+
+It is a metadata package that:
+1. Depends on the `rust-ms` Chocolatey package which provides `cargo`
+2. Runs `cargo install tokenmix-cli` to fetch and build the binary from crates.io
+
+The actual binary is therefore subject to crates.io's own integrity verification:
+  https://crates.io/crates/tokenmix-cli
+
+Source code:
+  https://github.com/TokenMixAi/tg-ai-bot/tree/main/rust

@@ -1,0 +1,28 @@
+name: tokenmix-cli
+base: core22
+version: "0.1.0"
+summary: CLI for TokenMix - one API key for 155+ LLMs
+description: |
+  Command-line interface for TokenMix.
+
+  One API key for GPT-5, Claude, Gemini, DeepSeek, Mistral, Qwen and 155+
+  other LLMs through a single OpenAI-compatible API.
+
+  Get a free API key at https://tokenmix.ai
+
+grade: stable
+confinement: strict
+license: MIT
+
+parts:
+  tokenmix-cli:
+    plugin: rust
+    source: https://github.com/TokenMixAi/tg-ai-bot.git
+    source-subdir: rust
+
+apps:
+  tokenmix:
+    command: bin/tokenmix
+    plugs:
+      - network
+      - home
